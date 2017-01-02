@@ -1,19 +1,14 @@
 import re
 import string
 import sys
+import getpass
 
 
 def input_password():
-    password = None
-    while not password:
-        password = input('Введите ваш пароль: ')
-        if not password:
-            print("Введен пустой пароль, попробуй снова.")
-        elif re.search('[а-яА-Я]', password):
-            print('Недопустимы кириллические символы в пароле. Введите пароль снова')
-            password = None
-        else:
-            return password
+    password = input('Введите ваш пароль: ')
+    if not password:
+        sys.exit('Введен пустой пароль, попробуй снова.')
+    return password
 
 def get_blacklisted_passwords(filepath):
     try:
