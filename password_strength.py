@@ -1,11 +1,10 @@
-import re
 import string
 import sys
-import getpass
+from getpass import getpass
 
 
 def input_password():
-    password = input('Введите ваш пароль: ')
+    password = getpass('Введите ваш пароль: ')
     if not password:
         sys.exit('Введен пустой пароль, попробуй снова.')
     return password
