@@ -9,6 +9,7 @@ def input_password():
         sys.exit('Введен пустой пароль, попробуй снова.')
     return password
 
+
 def get_blacklisted_passwords(filepath):
     try:
         with open(filepath) as infile:
@@ -17,19 +18,29 @@ def get_blacklisted_passwords(filepath):
     except FileNotFoundError:
         sys.exit('Неверный путь к файлу словаря с наиболее частыми паролями.')
 
+
+def get_score_for_password_length(password):
+    return int(len(password) >= 4) + int(len(password) >= 8) + int(len(password) >= 14)
+
+
+def get_score_for_both_capital_lowercase_chars(password):
+    return 3 * int(password.lower() != password or password.upper() != password)
+
+
+def get_score_for_digits(password):
+    return int(len([char for char in password if char in string.digits]) > 0) * 2
+
+
+def get_score_for_special_chars(password):
+    return int(len([char for char in password if char in string.punctuation]) > 0) * 2
+
+
 def get_password_strength(password, blacklist):
-    score = 0
     if password in blacklist:
         sys.exit("Пароль находится в черном списке, попробуйте другой.")
     else:
-        # plus 1 to score if password lenght >= 4, 2 if >= 8, 3 if >= 14
-        score += int(len(password) >= 4) + int(len(password) >= 8) + int(len(password) >= 14)
-        # plus 3 to score if password contains both lower-case and upper-case characters
-        score += 3 * int(password.lower() != password or password.upper() != password)
-        # plus 2 to score if password contains digits
-        score += int(len([char for char in password if char in string.digits]) > 0) * 2
-        # plus 2 to score if password contains special characters, such as '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-        score += int(len([char for char in password if char in string.punctuation]) > 0) * 2
+        score = get_score_for_password_length(password) + get_score_for_both_capital_lowercase_chars(password) + \
+                get_score_for_digits(password) + get_score_for_special_chars(password)
     return "Оценка степени защиты пароля - {}/10".format(score)
 
 
